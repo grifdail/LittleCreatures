@@ -20,8 +20,8 @@ public class Interview : MonoBehaviour
     [SerializeField]
     private GameObject[] m_Answers;
 
-    private int currentQuestionIndex = 0;
-    private PuppetController.PuppetString currentPuppetPart;
+    private int m_CurrentQuestionIndex = 0;
+    private PuppetController.PuppetString m_CurrentPuppetPart;
 
     private float m_ValidationTimer; 
     private int m_AnswerIndex = 0; // the direction the player validated his choice in
@@ -38,7 +38,7 @@ public class Interview : MonoBehaviour
 
     private void AskNewQuestion()
     {
-        currentPuppetPart = m_PuppetController.strings[currentQuestionIndex];
+        m_CurrentPuppetPart = m_PuppetController.strings[m_CurrentQuestionIndex];
         UpdateQuestion();
     }
 
@@ -46,7 +46,7 @@ public class Interview : MonoBehaviour
     {
         for (int i = 0; i < m_CurrentQuestionsImages.Length; i++)
         {
-            m_CurrentQuestionsImages[i].sprite = m_Questions[currentQuestionIndex].m_QuestionsImages[i].sprite;
+            m_CurrentQuestionsImages[i].sprite = m_Questions[m_CurrentQuestionIndex].m_QuestionsImages[i].sprite;
         }
     }
 
@@ -107,19 +107,19 @@ public class Interview : MonoBehaviour
     private void UpdateMesh()
     {
         GameObject mesh = m_Answers[Random.Range(0, m_Answers.Length)];
-        GameObject go = Instantiate(mesh, Vector3.zero, Quaternion.Euler(currentPuppetPart.angle), m_BodyTransform) as GameObject;
+        GameObject go = Instantiate(mesh, Vector3.zero, Quaternion.Euler(m_CurrentPuppetPart.angle), m_BodyTransform) as GameObject;
         Transform goTransform = go.transform;
         goTransform.GetChild(0).GetComponent<ConfigurableJoint>().connectedBody = m_BodyTransform.GetComponent<Rigidbody>();
-        currentPuppetPart.handle.GetComponent<Joint>().connectedBody = goTransform.GetChild(2).GetComponent<Rigidbody>();
+        m_CurrentPuppetPart.handle.GetComponent<Joint>().connectedBody = goTransform.GetChild(2).GetComponent<Rigidbody>();
 
         EndQuestion();
     }
 
     private void EndQuestion()
     {
-        currentQuestionIndex++;
+        m_CurrentQuestionIndex++;
 
-        if (currentQuestionIndex < m_PuppetController.strings.Length)
+        if (m_CurrentQuestionIndex < m_PuppetController.strings.Length)
         {
             AskNewQuestion();
         }
