@@ -3,26 +3,30 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 
 public class Interview : MonoBehaviour
-{    
+{
+    [Header("Creature"), SerializeField]
+    private PuppetController m_PuppetController;
     [SerializeField]
-    private Image[] m_DisplayedAnswers;
+    private Transform m_BodyTransform;
+    private List<Transform> m_BodyParts = new List<Transform>();
+
+    [Header("Questions && Answers"), SerializeField]
+    private float m_ValidationTime = 0f;
+    [SerializeField]
+    private Image[] m_ImagesOfAnswers;
     [SerializeField]
     private Questions[] m_Questions;
 
-    private int m_NumberOfQuestions;
+    private int m_QuestionIndex = 0; // Question being asked
+    private int m_QuestionAsked = 0; // Amount of questions that have been asked
+    private List<int> m_UnaskedQuestions = new List<int>(); // List of unasked questions
 
-    private int m_QuestionIndex;
-    private List<int> m_UnaskedQuestions = new List<int>();
-
-    [SerializeField]
-    private float m_ValidationTime;
-    private float m_ValidationTimer;
-    private int m_AnswerIndex = 0;
-
-    Vector2 currentInput;
+    private float m_ValidationTimer; 
+    private int m_AnswerIndex = 0; // the direction the player validated his choice in
 
     protected void Start()
     {
+        InitialiseBodyParts();
         InitialiseUnaskedQuestions();
         AskNewQuestion();
     }
@@ -35,14 +39,20 @@ public class Interview : MonoBehaviour
         }
     }
 
+    private void InitialiseBodyParts()
+    {
+        // Instantiate body
+
+        // Add body parts
+        for (int i = 0; i < 5; i++)
+        {
+            m_BodyParts.Add(m_BodyTransform.GetChild(i).GetComponent<Transform>());
+        }
+    }
+
     protected void Update()
     {
         SelectAnswer();
-    }
-
-    private void AttributeBody()
-    {
-        
     }
 
     private void AskNewQuestion()
@@ -51,24 +61,25 @@ public class Interview : MonoBehaviour
         UpdateQuestion();
     }
 
+    // Attribute a never asked question
     private void AttributeQuestionIndex()
     {
         int newIndex = Random.Range(0, m_UnaskedQuestions.Count);
         m_QuestionIndex = newIndex;
-        m_UnaskedQuestions.RemoveAt(newIndex); 
+        m_UnaskedQuestions.RemoveAt(newIndex);
     }
 
     private void UpdateQuestion()
     {
-        for (int i = 0; i < m_DisplayedAnswers.Length; i++)
+        for (int i = 0; i < m_ImagesOfAnswers.Length; i++)
         {
-            m_DisplayedAnswers[i].sprite = m_Questions[0].m_AnswersImages[i].sprite;
+            m_ImagesOfAnswers[i].sprite = m_Questions[m_QuestionAsked].m_AnswersImages[i].sprite;
         }
     }
 
     private void SelectAnswer()
     {
-        currentInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
+        Vector2 currentInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
 
         if (currentInput != Vector2.zero)
         {
@@ -97,12 +108,10 @@ public class Interview : MonoBehaviour
         {
             if (x > 0)
             {
-                print("RIGHT");
                 m_AnswerIndex = 2;
             }
             else
             {
-                print("LEFT");
                 m_AnswerIndex = 1;
             }
         }
@@ -111,15 +120,53 @@ public class Interview : MonoBehaviour
         {
             if (y > 0)
             {
-                print("UP");
                 m_AnswerIndex = 0;
             }
             else
             {
-                print("DOWN");
                 m_AnswerIndex = 3;
             }
         }
+
+        UpdateMesh();
+    }
+
+    private void UpdateMesh()
+    {
+        // Down is random choice
+        if (m_AnswerIndex == 3)
+        {
+            int randomBodyPart = Random.Range(0, 3);
+            m_BodyParts[m_QuestionAsked].GetComponent<MeshFilter>().sharedMesh = m_Questions[m_QuestionIndex].m_AnswersMeshes[randomBodyPart].GetComponent<MeshFilter>().sharedMesh;
+            m_BodyParts[m_QuestionAsked].GetComponent<MeshRenderer>().sharedMaterial = m_Questions[m_QuestionIndex].m_AnswersMeshes[randomBodyPart].GetComponent<MeshRenderer>().sharedMaterial;
+        }
+        else
+        {
+            m_BodyParts[m_QuestionAsked].GetComponent<MeshFilter>().sharedMesh = m_Questions[m_QuestionIndex].m_AnswersMeshes[m_AnswerIndex].GetComponent<MeshFilter>().sharedMesh;
+            m_BodyParts[m_QuestionAsked].GetComponent<MeshRenderer>().sharedMaterial = m_Questions[m_QuestionIndex].m_AnswersMeshes[m_AnswerIndex].GetComponent<MeshRenderer>().sharedMaterial;
+        }
+
+        EndQuestion();
+    }
+
+    private void EndQuestion()
+    {
+        m_QuestionAsked++;
+
+        if (m_UnaskedQuestions.Count > 0)
+        {
+            AskNewQuestion();
+        }
+        else
+        {
+            StartGame();
+        }
+    }
+
+    private void StartGame()
+    {
+        m_PuppetController.enabled = true;
+        gameObject.SetActive(false);
     }
 }
 
@@ -128,5 +175,5 @@ public class Questions
 {
     public string m_Question;
     public Image[] m_AnswersImages;
-    public MeshRenderer[] m_AnswersMeshes;
+    public Transform[] m_AnswersMeshes;
 }
