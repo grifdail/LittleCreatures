@@ -10,6 +10,22 @@ public class PuppetController : MonoBehaviour {
     public Transform right;
     public Transform back;
 
+    public enum Axis {X, Y };
+
+    [System.Serializable]
+    public class PuppetString
+    {
+        public Transform handle;
+        public float scale = 1;
+        public Axis axis = Axis.X;
+        public bool positive = true;
+        public Vector3 location;
+        public Vector3 direction = Vector3.up;
+        public Vector3 influence = Vector3.zero;
+    }
+
+    public PuppetString[] strings;
+
     // Use this for initialization
     void Start () {
 	    
@@ -18,10 +34,17 @@ public class PuppetController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         Vector2 dir = CircleToSquare(new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")), 0.5f);
-        forward.localPosition = new Vector3(0, dir.y > 0 ? 0 : -dir.y, 2);
-        left.localPosition = new Vector3(-2, dir.x > 0 ? 0 : -dir.x, 0);
-        right.localPosition = new Vector3(2, dir.x < 0 ? 0 : dir.x, 0);
-        back.localPosition = new Vector3(0, dir.y < 0 ? 0 : dir.y, -2);
+        foreach (PuppetString str in strings)
+        {
+            float value = str.axis == Axis.X ? dir.x : dir.y;
+            bool isActivated = str.positive ? value > 0 : value < 0;
+            float influenceValue = str.axis == Axis.X ? dir.y : dir.x;
+            str.handle.localPosition = str.location + (isActivated ? Mathf.Abs(value) * str.scale * str.direction.normalized + influenceValue * str.influence : Vector3.zero);
+        }
+        //forward.localPosition = new Vector3(0, dir.y > 0 ? 0 : -dir.y, 2);
+        //left.localPosition = new Vector3(-2, dir.x > 0 ? 0 : -dir.x, 0);
+        //right.localPosition = new Vector3(2, dir.x < 0 ? 0 : dir.x, 0);
+        //back.localPosition = new Vector3(0, dir.y < 0 ? 0 : dir.y, -2);
     }
 
     static Vector2 CircleToSquare(Vector2 point)
