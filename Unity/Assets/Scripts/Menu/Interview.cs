@@ -20,7 +20,6 @@ public class Interview : MonoBehaviour
     [SerializeField]
     private Answers[] m_Answers;
 
-    private int m_QuestionIndex = 0; // Question being asked
     private int m_QuestionAsked = 0; // Amount of questions that have been asked
     private List<int> m_UnaskedQuestions = new List<int>(); // List of unasked questions
 
@@ -68,7 +67,6 @@ public class Interview : MonoBehaviour
     private void AttributeQuestionIndex()
     {
         int newIndex = Random.Range(0, m_UnaskedQuestions.Count);
-        m_QuestionIndex = newIndex;
         m_UnaskedQuestions.RemoveAt(newIndex);
     }
 
@@ -136,21 +134,20 @@ public class Interview : MonoBehaviour
 
     private void UpdateMesh()
     {
+        int randomAnswerMesh = Random.Range(1, 4);
+
         // Down is random choice
         if (m_AnswerIndex == 3)
         {
             int randomBodyPart = Random.Range(0, 3);
-            m_BodyParts[m_QuestionAsked].GetComponent<MeshFilter>().sharedMesh = m_Answers[m_QuestionIndex].m_AnswersMeshes[randomBodyPart].GetComponent<MeshFilter>().sharedMesh;
-            m_BodyParts[m_QuestionAsked].GetComponent<MeshRenderer>().sharedMaterial = m_Answers[m_QuestionIndex].m_AnswersMeshes[randomBodyPart].GetComponent<MeshRenderer>().sharedMaterial;
-            //m_BodyParts[m_QuestionAsked].GetComponent<MeshFilter>().sharedMesh = m_Questions[m_QuestionIndex].m_AnswersMeshes[randomBodyPart].GetComponent<MeshFilter>().sharedMesh;
-            //m_BodyParts[m_QuestionAsked].GetComponent<MeshRenderer>().sharedMaterial = m_Questions[m_QuestionIndex].m_AnswersMeshes[randomBodyPart].GetComponent<MeshRenderer>().sharedMaterial;
+            
+            m_BodyParts[m_QuestionAsked].GetComponent<MeshFilter>().sharedMesh = m_Answers[randomAnswerMesh].m_AnswersMeshes[randomBodyPart].GetComponent<MeshFilter>().sharedMesh;
+            m_BodyParts[m_QuestionAsked].GetComponent<MeshRenderer>().sharedMaterial = m_Answers[randomAnswerMesh].m_AnswersMeshes[randomBodyPart].GetComponent<MeshRenderer>().sharedMaterial;
         }
         else
         {
-            m_BodyParts[m_QuestionAsked].GetComponent<MeshFilter>().sharedMesh = m_Answers[m_QuestionIndex].m_AnswersMeshes[m_AnswerIndex].GetComponent<MeshFilter>().sharedMesh;
-            m_BodyParts[m_QuestionAsked].GetComponent<MeshRenderer>().sharedMaterial = m_Answers[m_QuestionIndex].m_AnswersMeshes[m_AnswerIndex].GetComponent<MeshRenderer>().sharedMaterial;
-            //m_BodyParts[m_QuestionAsked].GetComponent<MeshFilter>().sharedMesh = m_Questions[m_QuestionIndex].m_AnswersMeshes[m_AnswerIndex].GetComponent<MeshFilter>().sharedMesh;
-            //m_BodyParts[m_QuestionAsked].GetComponent<MeshRenderer>().sharedMaterial = m_Questions[m_QuestionIndex].m_AnswersMeshes[m_AnswerIndex].GetComponent<MeshRenderer>().sharedMaterial;
+            m_BodyParts[m_QuestionAsked].GetComponent<MeshFilter>().sharedMesh = m_Answers[randomAnswerMesh].m_AnswersMeshes[m_AnswerIndex].GetComponent<MeshFilter>().sharedMesh;
+            m_BodyParts[m_QuestionAsked].GetComponent<MeshRenderer>().sharedMaterial = m_Answers[randomAnswerMesh].m_AnswersMeshes[m_AnswerIndex].GetComponent<MeshRenderer>().sharedMaterial;
         }
 
         EndQuestion();
