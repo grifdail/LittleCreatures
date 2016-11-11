@@ -7,7 +7,8 @@ public class Interview : MonoBehaviour
     [Header("Creature"), SerializeField]
     private PuppetController m_PuppetController;
     [SerializeField]
-    private MeshFilter[] m_BodyParts;
+    private Transform m_BodyTransform;
+    private List<Transform> m_BodyParts = new List<Transform>();
 
     [Header("Questions && Answers"), SerializeField]
     private float m_ValidationTime = 0f;
@@ -25,6 +26,7 @@ public class Interview : MonoBehaviour
 
     protected void Start()
     {
+        InitialiseBodyParts();
         InitialiseUnaskedQuestions();
         AskNewQuestion();
     }
@@ -34,6 +36,17 @@ public class Interview : MonoBehaviour
         for (int i = 0; i < m_Questions.Length; i++)
         {
             m_UnaskedQuestions.Add(i);
+        }
+    }
+
+    private void InitialiseBodyParts()
+    {
+        // Instantiate body
+
+        // Add body parts
+        for (int i = 0; i < 5; i++)
+        {
+            m_BodyParts.Add(m_BodyTransform.GetChild(i).GetComponent<Transform>());
         }
     }
 
@@ -124,11 +137,13 @@ public class Interview : MonoBehaviour
         if (m_AnswerIndex == 3)
         {
             int randomBodyPart = Random.Range(0, 3);
-            m_BodyParts[m_QuestionAsked].sharedMesh = m_Questions[m_QuestionIndex].m_AnswersMeshes[randomBodyPart].sharedMesh;
+            m_BodyParts[m_QuestionAsked].GetComponent<MeshFilter>().sharedMesh = m_Questions[m_QuestionIndex].m_AnswersMeshes[randomBodyPart].GetComponent<MeshFilter>().sharedMesh;
+            m_BodyParts[m_QuestionAsked].GetComponent<MeshRenderer>().sharedMaterial = m_Questions[m_QuestionIndex].m_AnswersMeshes[randomBodyPart].GetComponent<MeshRenderer>().sharedMaterial;
         }
         else
         {
-            m_BodyParts[m_QuestionAsked].sharedMesh = m_Questions[m_QuestionIndex].m_AnswersMeshes[m_AnswerIndex].sharedMesh;
+            m_BodyParts[m_QuestionAsked].GetComponent<MeshFilter>().sharedMesh = m_Questions[m_QuestionIndex].m_AnswersMeshes[m_AnswerIndex].GetComponent<MeshFilter>().sharedMesh;
+            m_BodyParts[m_QuestionAsked].GetComponent<MeshRenderer>().sharedMaterial = m_Questions[m_QuestionIndex].m_AnswersMeshes[m_AnswerIndex].GetComponent<MeshRenderer>().sharedMaterial;
         }
 
         EndQuestion();
@@ -160,5 +175,5 @@ public class Questions
 {
     public string m_Question;
     public Image[] m_AnswersImages;
-    public MeshFilter[] m_AnswersMeshes;
+    public Transform[] m_AnswersMeshes;
 }
