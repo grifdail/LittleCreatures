@@ -35,12 +35,10 @@ public class InputRecoder : MonoBehaviour {
         };
         if (Input.GetKeyDown("r"))
         {
-            Debug.Log("start");
             Record();
         }
         if (Input.GetKeyDown("p"))
         {
-            Debug.Log("nope");
             Play(Stop());
         }
     }
@@ -100,7 +98,6 @@ public class InputRecoder : MonoBehaviour {
             yield return true;
         }
         currentlyDoing = null;
-        Debug.Log("en ply");
     }
 
 }
