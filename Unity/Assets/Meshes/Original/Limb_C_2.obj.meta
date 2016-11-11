@@ -1,17 +1,17 @@
 fileFormatVersion: 2
-guid: 9e9fb87c67056434b8e76a961755729d
-timeCreated: 1478907400
+guid: 7636924b22d6d0e439d58fa7412dd9a6
+timeCreated: 1478907436
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: //RootNode
-    100002: LimbB_1
+    100002: limb_C_2
     400000: //RootNode
-    400002: LimbB_1
-    2300000: LimbB_1
-    3300000: LimbB_1
-    4300000: LimbB_1
+    400002: limb_C_2
+    2300000: limb_C_2
+    3300000: limb_C_2
+    4300000: limb_C_2
   materials:
     importMaterials: 1
     materialName: 0
