@@ -13,12 +13,12 @@ public class RopeRenderer : MonoBehaviour {
             target = GetComponent<Joint>().connectedBody.transform;
         }
         
-        //_renderer = GetComponent<LineRenderer>();
+        _renderer = GetComponent<LineRenderer>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        //_renderer.SetPosition(0, transform.position);
-       // _renderer.SetPosition(1, target.position);
+        _renderer.SetPosition(0, transform.position);
+        _renderer.SetPosition(1, target.position);
 	}
 }

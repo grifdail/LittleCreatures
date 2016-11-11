@@ -19,6 +19,7 @@ public class PuppetController : MonoBehaviour {
         public Vector3 location;
         public Vector3 direction = Vector3.up;
         public Vector3 influence = Vector3.zero;
+        public AudioSource audio;
     }
 
     public PuppetString[] strings;
@@ -37,6 +38,7 @@ public class PuppetController : MonoBehaviour {
             bool isActivated = str.positive ? value > 0 : value < 0;
             float influenceValue = str.axis == Axis.X ? dir.y : dir.x;
             str.handle.localPosition = str.location + (isActivated ? Mathf.Abs(value) * str.scale * str.direction.normalized + influenceValue * str.influence : Vector3.zero);
+            str.audio.volume = isActivated ? Mathf.Abs(value) : 0;
         }
         //forward.localPosition = new Vector3(0, dir.y > 0 ? 0 : -dir.y, 2);
         //left.localPosition = new Vector3(-2, dir.x > 0 ? 0 : -dir.x, 0);
