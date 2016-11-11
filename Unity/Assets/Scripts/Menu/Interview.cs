@@ -8,48 +8,27 @@ public class Interview : MonoBehaviour
     private PuppetController m_PuppetController;
     [SerializeField]
     private Transform m_BodyTransform;
-    private List<Transform> m_BodyParts = new List<Transform>();
 
     [Header("Questions"), SerializeField]
     private Questions[] m_Questions;
+    
     [SerializeField]
     private Image[] m_CurrentQuestionsImages;
 
     [Header("Answers"), SerializeField]
     private float m_ValidationTime = 0f;
     [SerializeField]
-    private Answers[] m_Answers;
+    private GameObject[] m_Answers;
 
-    private int m_AskedQuestions = 0; // Amount of questions that have been asked
-    private List<int> m_UnaskedQuestions = new List<int>(); // List of unasked questions
+    private int currentQuestionIndex = 0;
+    private PuppetController.PuppetString currentPuppetPart;
 
     private float m_ValidationTimer; 
     private int m_AnswerIndex = 0; // the direction the player validated his choice in
 
     protected void Start()
     {
-        InitialiseBodyParts();
-        InitialiseUnaskedQuestions();
         AskNewQuestion();
-    }
-
-    private void InitialiseUnaskedQuestions()
-    {
-        for (int i = 0; i < m_Questions.Length; i++)
-        {
-            m_UnaskedQuestions.Add(i);
-        }
-    }
-
-    private void InitialiseBodyParts()
-    {
-        // Instantiate body
-
-        // Add body parts
-        for (int i = 0; i < 5; i++)
-        {
-            m_BodyParts.Add(m_BodyTransform.GetChild(i).GetComponent<Transform>());
-        }
     }
 
     protected void Update()
@@ -59,22 +38,15 @@ public class Interview : MonoBehaviour
 
     private void AskNewQuestion()
     {
-        AttributeQuestionIndex();
+        currentPuppetPart = m_PuppetController.strings[currentQuestionIndex];
         UpdateQuestion();
-    }
-
-    // Attribute a never asked question
-    private void AttributeQuestionIndex()
-    {
-        int newIndex = Random.Range(0, m_UnaskedQuestions.Count);
-        m_UnaskedQuestions.RemoveAt(newIndex);
     }
 
     private void UpdateQuestion()
     {
         for (int i = 0; i < m_CurrentQuestionsImages.Length; i++)
         {
-            m_CurrentQuestionsImages[i].sprite = m_Questions[m_AskedQuestions].m_QuestionsImages[i].sprite;
+            m_CurrentQuestionsImages[i].sprite = m_Questions[currentQuestionIndex].m_QuestionsImages[i].sprite;
         }
     }
 
@@ -134,30 +106,20 @@ public class Interview : MonoBehaviour
 
     private void UpdateMesh()
     {
-        int randomAnswerMesh = Random.Range(1, 4);
-
-        // Down is random choice
-        if (m_AnswerIndex == 3)
-        {
-            int randomBodyPart = Random.Range(0, 3);
-            
-            m_BodyParts[m_AskedQuestions].GetComponent<MeshFilter>().sharedMesh = m_Answers[randomAnswerMesh].m_AnswersMeshes[randomBodyPart].GetComponent<MeshFilter>().sharedMesh;
-            m_BodyParts[m_AskedQuestions].GetComponent<MeshRenderer>().sharedMaterial = m_Answers[randomAnswerMesh].m_AnswersMeshes[randomBodyPart].GetComponent<MeshRenderer>().sharedMaterial;
-        }
-        else
-        {
-            m_BodyParts[m_AskedQuestions].GetComponent<MeshFilter>().sharedMesh = m_Answers[randomAnswerMesh].m_AnswersMeshes[m_AnswerIndex].GetComponent<MeshFilter>().sharedMesh;
-            m_BodyParts[m_AskedQuestions].GetComponent<MeshRenderer>().sharedMaterial = m_Answers[randomAnswerMesh].m_AnswersMeshes[m_AnswerIndex].GetComponent<MeshRenderer>().sharedMaterial;
-        }
+        GameObject mesh = m_Answers[Random.Range(0, m_Answers.Length)];
+        GameObject go = Instantiate(mesh, Vector3.zero, Quaternion.Euler(currentPuppetPart.angle), m_BodyTransform) as GameObject;
+        Transform goTransform = go.transform;
+        goTransform.GetChild(0).GetComponent<ConfigurableJoint>().connectedBody = m_BodyTransform.GetComponent<Rigidbody>();
+        currentPuppetPart.handle.GetComponent<Joint>().connectedBody = goTransform.GetChild(2).GetComponent<Rigidbody>();
 
         EndQuestion();
     }
 
     private void EndQuestion()
     {
-        m_AskedQuestions++;
+        currentQuestionIndex++;
 
-        if (m_UnaskedQuestions.Count > 0)
+        if (currentQuestionIndex < m_PuppetController.strings.Length)
         {
             AskNewQuestion();
         }
@@ -179,11 +141,4 @@ public class Questions
 {
     public string m_Question;
     public Image[] m_QuestionsImages;
-}
-
-[System.Serializable]
-public class Answers
-{
-    public string m_Answer;
-    public Transform[] m_AnswersMeshes;
 }

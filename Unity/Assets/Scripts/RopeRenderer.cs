@@ -10,7 +10,7 @@ public class RopeRenderer : MonoBehaviour {
 	void Start () {
         if (target == null)
         {
-            target = GetComponent<Joint>().connectedBody.transform;
+            //target = GetComponent<Joint>().connectedBody.transform;
         }
         
         _renderer = GetComponent<LineRenderer>();
@@ -18,7 +18,7 @@ public class RopeRenderer : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        _renderer.SetPosition(0, transform.position);
-        _renderer.SetPosition(1, target.position);
+        //_renderer.SetPosition(0, transform.position);
+        //_renderer.SetPosition(1, target.position);
 	}
 }

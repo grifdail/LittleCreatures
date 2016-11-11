@@ -20,6 +20,7 @@ public class PuppetController : MonoBehaviour {
         public Vector3 direction = Vector3.up;
         public Vector3 influence = Vector3.zero;
         public AudioSource audio;
+        public Vector3 angle;
     }
 
     public PuppetString[] strings;
@@ -40,10 +41,6 @@ public class PuppetController : MonoBehaviour {
             str.handle.localPosition = str.location + (isActivated ? Mathf.Abs(value) * str.scale * str.direction.normalized + influenceValue * str.influence : Vector3.zero);
             str.audio.volume = isActivated ? Mathf.Abs(value) : 0;
         }
-        //forward.localPosition = new Vector3(0, dir.y > 0 ? 0 : -dir.y, 2);
-        //left.localPosition = new Vector3(-2, dir.x > 0 ? 0 : -dir.x, 0);
-        //right.localPosition = new Vector3(2, dir.x < 0 ? 0 : dir.x, 0);
-        //back.localPosition = new Vector3(0, dir.y < 0 ? 0 : dir.y, -2);
     }
 
     static Vector2 CircleToSquare(Vector2 point)
