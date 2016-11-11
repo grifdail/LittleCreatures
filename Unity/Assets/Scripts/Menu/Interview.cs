@@ -10,7 +10,7 @@ public class Interview : MonoBehaviour
     private MeshFilter[] m_BodyParts;
 
     [Header("Questions && Answers"), SerializeField]
-    private float m_ValidationTime;
+    private float m_ValidationTime = 0f;
     [SerializeField]
     private Image[] m_ImagesOfAnswers;
     [SerializeField]
@@ -22,8 +22,6 @@ public class Interview : MonoBehaviour
 
     private float m_ValidationTimer; 
     private int m_AnswerIndex = 0; // the direction the player validated his choice in
-
-    Vector2 currentInput;
 
     protected void Start()
     {
@@ -68,7 +66,7 @@ public class Interview : MonoBehaviour
 
     private void SelectAnswer()
     {
-        currentInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
+        Vector2 currentInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
 
         if (currentInput != Vector2.zero)
         {
@@ -97,12 +95,10 @@ public class Interview : MonoBehaviour
         {
             if (x > 0)
             {
-                print("RIGHT");
                 m_AnswerIndex = 2;
             }
             else
             {
-                print("LEFT");
                 m_AnswerIndex = 1;
             }
         }
@@ -111,13 +107,10 @@ public class Interview : MonoBehaviour
         {
             if (y > 0)
             {
-                print("UP");
                 m_AnswerIndex = 0;
             }
             else
             {
-                // Random choice
-                print("DOWN");
                 m_AnswerIndex = 3;
             }
         }
@@ -127,6 +120,7 @@ public class Interview : MonoBehaviour
 
     private void UpdateMesh()
     {
+        // Down is random choice
         if (m_AnswerIndex == 3)
         {
             int randomBodyPart = Random.Range(0, 3);
@@ -137,6 +131,11 @@ public class Interview : MonoBehaviour
             m_BodyParts[m_QuestionAsked].sharedMesh = m_Questions[m_QuestionIndex].m_AnswersMeshes[m_AnswerIndex].sharedMesh;
         }
 
+        EndQuestion();
+    }
+
+    private void EndQuestion()
+    {
         m_QuestionAsked++;
 
         if (m_UnaskedQuestions.Count > 0)
@@ -152,7 +151,7 @@ public class Interview : MonoBehaviour
     private void StartGame()
     {
         m_PuppetController.enabled = true;
-        enabled = false;
+        gameObject.SetActive(false);
     }
 }
 
