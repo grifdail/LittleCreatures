@@ -5,10 +5,7 @@ public class PuppetController : MonoBehaviour {
 
     public float rotationSpeed = 1;
 
-    public Transform forward;
-    public Transform left;
-    public Transform right;
-    public Transform back;
+    public InputRecoder input;
 
     public enum Axis {X, Y };
 
@@ -33,7 +30,7 @@ public class PuppetController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        Vector2 dir = CircleToSquare(new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")), 0.5f);
+        Vector2 dir = CircleToSquare(input.axis, 0.5f);
         foreach (PuppetString str in strings)
         {
             float value = str.axis == Axis.X ? dir.x : dir.y;
