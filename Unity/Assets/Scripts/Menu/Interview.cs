@@ -26,6 +26,8 @@ public class Interview : MonoBehaviour
     private float m_ValidationTimer; 
     private int m_AnswerIndex = 0; // the direction the player validated his choice in
 
+
+
     protected void Start()
     {
         AskNewQuestion();
@@ -107,7 +109,7 @@ public class Interview : MonoBehaviour
     private void UpdateMesh()
     {
         GameObject mesh = m_Answers[Random.Range(0, m_Answers.Length)];
-        GameObject go = Instantiate(mesh, Vector3.zero, Quaternion.Euler(m_CurrentPuppetPart.angle), m_BodyTransform) as GameObject;
+        GameObject go = Instantiate(mesh, m_BodyTransform.position, Quaternion.Euler(m_CurrentPuppetPart.angle), m_BodyTransform) as GameObject;
         Transform goTransform = go.transform;
         goTransform.GetChild(0).GetComponent<ConfigurableJoint>().connectedBody = m_BodyTransform.GetComponent<Rigidbody>();
         m_CurrentPuppetPart.handle.GetComponent<Joint>().connectedBody = goTransform.GetChild(2).GetComponent<Rigidbody>();
@@ -131,8 +133,13 @@ public class Interview : MonoBehaviour
 
     private void StartGame()
     {
-        m_PuppetController.enabled = true;
+        //  m_PuppetController.enabled = true;
         gameObject.SetActive(false);
+    }
+
+    public bool isCompleted()
+    {
+        return !(m_CurrentQuestionIndex < m_PuppetController.strings.Length);
     }
 }
 

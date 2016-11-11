@@ -33,14 +33,6 @@ public class InputRecoder : MonoBehaviour {
         {
             axis = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         };
-        if (Input.GetKeyDown("r"))
-        {
-            Record();
-        }
-        if (Input.GetKeyDown("p"))
-        {
-            Play(Stop());
-        }
     }
 
     public void Play(List<InputState> record = null)
@@ -58,7 +50,7 @@ public class InputRecoder : MonoBehaviour {
         
     }
 
-    void Record()
+    public void Record()
     {
         if (currentlyDoing != null)
         {
@@ -68,7 +60,7 @@ public class InputRecoder : MonoBehaviour {
         StartCoroutine(currentlyDoing);
     }
 
-    List<InputState> Stop()
+    public List<InputState> Stop()
     {
         if (currentlyDoing != null)
         {
