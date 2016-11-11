@@ -3,21 +3,25 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 
 public class Interview : MonoBehaviour
-{    
+{
+    [Header("Creature"), SerializeField]
+    private PuppetController m_PuppetController;
     [SerializeField]
-    private Image[] m_DisplayedAnswers;
+    private MeshFilter[] m_BodyParts;
+
+    [Header("Questions && Answers"), SerializeField]
+    private float m_ValidationTime;
+    [SerializeField]
+    private Image[] m_ImagesOfAnswers;
     [SerializeField]
     private Questions[] m_Questions;
 
-    private int m_NumberOfQuestions;
+    private int m_QuestionIndex = 0; // Question being asked
+    private int m_QuestionAsked = 0; // Amount of questions that have been asked
+    private List<int> m_UnaskedQuestions = new List<int>(); // List of unasked questions
 
-    private int m_QuestionIndex;
-    private List<int> m_UnaskedQuestions = new List<int>();
-
-    [SerializeField]
-    private float m_ValidationTime;
-    private float m_ValidationTimer;
-    private int m_AnswerIndex = 0;
+    private float m_ValidationTimer; 
+    private int m_AnswerIndex = 0; // the direction the player validated his choice in
 
     Vector2 currentInput;
 
@@ -40,29 +44,25 @@ public class Interview : MonoBehaviour
         SelectAnswer();
     }
 
-    private void AttributeBody()
-    {
-        
-    }
-
     private void AskNewQuestion()
     {
         AttributeQuestionIndex();
         UpdateQuestion();
     }
 
+    // Attribute a never asked question
     private void AttributeQuestionIndex()
     {
         int newIndex = Random.Range(0, m_UnaskedQuestions.Count);
         m_QuestionIndex = newIndex;
-        m_UnaskedQuestions.RemoveAt(newIndex); 
+        m_UnaskedQuestions.RemoveAt(newIndex);
     }
 
     private void UpdateQuestion()
     {
-        for (int i = 0; i < m_DisplayedAnswers.Length; i++)
+        for (int i = 0; i < m_ImagesOfAnswers.Length; i++)
         {
-            m_DisplayedAnswers[i].sprite = m_Questions[0].m_AnswersImages[i].sprite;
+            m_ImagesOfAnswers[i].sprite = m_Questions[m_QuestionAsked].m_AnswersImages[i].sprite;
         }
     }
 
@@ -116,10 +116,43 @@ public class Interview : MonoBehaviour
             }
             else
             {
+                // Random choice
                 print("DOWN");
                 m_AnswerIndex = 3;
             }
         }
+
+        UpdateMesh();
+    }
+
+    private void UpdateMesh()
+    {
+        if (m_AnswerIndex == 3)
+        {
+            int randomBodyPart = Random.Range(0, 3);
+            m_BodyParts[m_QuestionAsked].sharedMesh = m_Questions[m_QuestionIndex].m_AnswersMeshes[randomBodyPart].sharedMesh;
+        }
+        else
+        {
+            m_BodyParts[m_QuestionAsked].sharedMesh = m_Questions[m_QuestionIndex].m_AnswersMeshes[m_AnswerIndex].sharedMesh;
+        }
+
+        m_QuestionAsked++;
+
+        if (m_UnaskedQuestions.Count > 0)
+        {
+            AskNewQuestion();
+        }
+        else
+        {
+            StartGame();
+        }
+    }
+
+    private void StartGame()
+    {
+        m_PuppetController.enabled = true;
+        enabled = false;
     }
 }
 
@@ -128,5 +161,5 @@ public class Questions
 {
     public string m_Question;
     public Image[] m_AnswersImages;
-    public MeshRenderer[] m_AnswersMeshes;
+    public MeshFilter[] m_AnswersMeshes;
 }
