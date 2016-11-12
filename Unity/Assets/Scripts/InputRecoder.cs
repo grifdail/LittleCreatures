@@ -50,6 +50,21 @@ public class InputRecoder : MonoBehaviour {
         
     }
 
+    public void PlayLoop(List<InputState> record = null)
+    {
+        if (record == null)
+        {
+            record = this.record;
+        }
+        if (currentlyDoing != null)
+        {
+            StopCoroutine(currentlyDoing);
+        }
+        currentlyDoing = PlayLoopCoroutine(record);
+        StartCoroutine(currentlyDoing);
+
+    }
+
     public void Record()
     {
         if (currentlyDoing != null)
@@ -91,5 +106,11 @@ public class InputRecoder : MonoBehaviour {
         }
         currentlyDoing = null;
     }
-
+    IEnumerator PlayLoopCoroutine(List<InputState> record)
+    {
+        while (true)
+        {
+            yield return PlayCoroutine(record);
+        }
+    }
 }

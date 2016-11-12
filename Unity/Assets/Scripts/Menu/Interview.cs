@@ -5,9 +5,9 @@ using System.Collections.Generic;
 public class Interview : MonoBehaviour
 {
     [Header("Creature"), SerializeField]
-    private PuppetController m_PuppetController;
+    public PuppetController m_PuppetController;
     [SerializeField]
-    private Transform m_BodyTransform;
+    public Transform m_BodyTransform;
 
     [Header("Questions"), SerializeField]
     private Questions[] m_Questions;
@@ -30,6 +30,12 @@ public class Interview : MonoBehaviour
 
     protected void Start()
     {
+        AskNewQuestion();
+    }
+
+    public void Reset()
+    {
+        m_CurrentQuestionIndex = 0;
         AskNewQuestion();
     }
 
