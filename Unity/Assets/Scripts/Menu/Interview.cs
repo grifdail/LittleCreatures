@@ -136,6 +136,10 @@ public class Interview : MonoBehaviour
     private void StartGame()
     {
         //  m_PuppetController.enabled = true;
+        foreach (Image image in m_CurrentQuestionsImages)
+        {
+            image.gameObject.SetActive(false);
+        }
         gameObject.SetActive(false);
     }
 
