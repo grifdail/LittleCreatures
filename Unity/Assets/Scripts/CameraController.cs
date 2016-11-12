@@ -9,6 +9,8 @@ public class CameraController : MonoBehaviour
     [SerializeField, Range(0f, 1.000f)]
     private float m_DeadZone;
 
+	public Transform targetDirection;
+
     private Vector3 m_StartPosition;
 
     protected void Start()
@@ -46,7 +48,7 @@ public class CameraController : MonoBehaviour
             transform.position = Vector3.Lerp(transform.position, m_StartPosition, m_LerpSpeed * Time.deltaTime);
         }
 
-        transform.LookAt(Vector3.zero);
+		transform.LookAt(targetDirection);
     }
 
     protected void OnDrawGizmos()
