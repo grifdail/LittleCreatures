@@ -47,7 +47,7 @@ public class GameFlow : MonoBehaviour {
         CreateCreature();
         // Interview
         _sceneContent = Instantiate(decoPuppetCreation, Vector3.zero, Quaternion.identity) as GameObject;
-        yield return PlayAnimation(curtain, "Opening", 4);
+        yield return PlayAnimation(curtain, "open", 4);
         yield return WaitForEndOfInterview();
 
         // Toy
@@ -63,7 +63,7 @@ public class GameFlow : MonoBehaviour {
         _activeRecorder.Play();
         yield return new WaitForSeconds(playSequenceDuration);
         //EndGame
-        yield return PlayAnimation(curtain, "Closing", 3);
+        yield return PlayAnimation(curtain, "close", 3);
         CreateGhost();
         Destroy(_sceneContent);
     }
@@ -71,10 +71,10 @@ public class GameFlow : MonoBehaviour {
     IEnumerator Curtain(GameObject deco)
     {
         _activeRecorder.Force(Vector2.zero);
-        yield return PlayAnimation(curtain, "Closing", 3);
+        yield return PlayAnimation(curtain, "open", 3);
         Destroy(_sceneContent);
         _sceneContent = Instantiate(deco, Vector3.zero, Quaternion.identity) as GameObject;
-        yield return PlayAnimation(curtain, "Opening", 4);
+        yield return PlayAnimation(curtain, "close", 4);
         _activeRecorder.Stop();
     }
 
