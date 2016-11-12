@@ -21,6 +21,7 @@ public class PuppetController : MonoBehaviour {
         public Vector3 influence = Vector3.zero;
         public AudioSource audio;
         public Vector3 angle;
+        public Transform membersLocation;
     }
 
     public PuppetString[] strings;
