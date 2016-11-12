@@ -18,7 +18,8 @@ public class Interview : MonoBehaviour
     [Header("Answers"), SerializeField]
     private float m_ValidationTime = 0f;
     [SerializeField]
-    private GameObject[] m_Answers;
+    public GameObject[] m_limbs;
+    public GameObject[] m_heads;
 
     private int m_CurrentQuestionIndex = 0;
     private PuppetController.PuppetString m_CurrentPuppetPart;
@@ -108,7 +109,8 @@ public class Interview : MonoBehaviour
 
     private void UpdateMesh()
     {
-        GameObject mesh = m_Answers[Random.Range(0, m_Answers.Length)];
+        GameObject[] list = m_CurrentPuppetPart.type == PuppetController.LimbType.Limb ? m_limbs : m_heads;
+        GameObject mesh = list[Random.Range(0, list.Length)];
         GameObject go = Instantiate(mesh, m_BodyTransform.position, Quaternion.Euler(m_CurrentPuppetPart.angle), m_BodyTransform) as GameObject;
         Transform goTransform = go.transform;
         Debug.Log(goTransform.name);

@@ -23,7 +23,10 @@ public class PuppetController : MonoBehaviour {
         public AudioSource audio;
         public Vector3 angle;
         public Transform membersLocation;
+        public LimbType type = LimbType.Limb;
     }
+
+    public enum LimbType { Limb, Head };
 
     public PuppetString[] strings;
 
