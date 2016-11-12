@@ -9,6 +9,7 @@ public class GameFlow : MonoBehaviour {
     public GameObject[] puppetBodies;
     public Vector3 puppetLocation = Vector3.zero;
 
+    public float titleScreenDuration = 5f;
     public GameObject decoPuppetCreation;
     public Interview interview;
     public GameObject decoPuppetToySequence;
@@ -43,10 +44,11 @@ public class GameFlow : MonoBehaviour {
 
     IEnumerator Flow()
     {
-
+        
         CreateCreature();
         // Interview
         _sceneContent = Instantiate(decoPuppetCreation, Vector3.zero, Quaternion.identity) as GameObject;
+        yield return new WaitForSeconds(titleScreenDuration);
         yield return PlayAnimation(curtain, "open", 4);
         yield return WaitForEndOfInterview();
 
