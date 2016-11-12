@@ -124,5 +124,9 @@ public class GameFlow : MonoBehaviour {
         _activeRecorder.PlayLoop();
         _ghostCount++;
         t.position = position;
+        foreach (AudioSource audio in _activePuppet.GetComponentsInChildren<AudioSource>())
+        {
+            audio.Stop();
+        }
     }
 }
