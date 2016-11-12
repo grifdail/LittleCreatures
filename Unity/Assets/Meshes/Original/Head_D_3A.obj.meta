@@ -1,17 +1,17 @@
 fileFormatVersion: 2
-guid: ebac521bc7af8b444a9ee55ef87a8890
-timeCreated: 1478955703
+guid: a15c9bcf1fffe4f4a83e757a23b4754f
+timeCreated: 1478955934
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: //RootNode
-    100002: vase_01
-    400000: //RootNode
-    400002: vase_01
-    2300000: vase_01
-    3300000: vase_01
-    4300000: vase_01
+    100000: Head_D_3A
+    100002: //RootNode
+    400000: Head_D_3A
+    400002: //RootNode
+    2300000: Head_D_3A
+    3300000: Head_D_3A
+    4300000: Head_D_3A
   materials:
     importMaterials: 1
     materialName: 0

@@ -1,17 +1,17 @@
 fileFormatVersion: 2
-guid: ebac521bc7af8b444a9ee55ef87a8890
-timeCreated: 1478955703
+guid: c604222dfe7792d419169e03d89c6d59
+timeCreated: 1478955935
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: //RootNode
-    100002: vase_01
+    100002: Head_D_LB
     400000: //RootNode
-    400002: vase_01
-    2300000: vase_01
-    3300000: vase_01
-    4300000: vase_01
+    400002: Head_D_LB
+    2300000: Head_D_LB
+    3300000: Head_D_LB
+    4300000: Head_D_LB
   materials:
     importMaterials: 1
     materialName: 0
