@@ -111,6 +111,7 @@ public class Interview : MonoBehaviour
         GameObject mesh = m_Answers[Random.Range(0, m_Answers.Length)];
         GameObject go = Instantiate(mesh, m_BodyTransform.position, Quaternion.Euler(m_CurrentPuppetPart.angle), m_BodyTransform) as GameObject;
         Transform goTransform = go.transform;
+        Debug.Log(goTransform.name);
         goTransform.position = m_CurrentPuppetPart.membersLocation ? m_CurrentPuppetPart.membersLocation.position : m_BodyTransform.position;
         goTransform.GetChild(0).GetComponent<Joint>().connectedBody = m_BodyTransform.GetComponent<Rigidbody>();
         m_CurrentPuppetPart.handle.GetComponent<Joint>().connectedBody = goTransform.GetChild(goTransform.childCount - 1).GetComponent<Rigidbody>();
