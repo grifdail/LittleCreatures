@@ -6,6 +6,7 @@ public class PuppetController : MonoBehaviour {
     public float rotationSpeed = 1;
 
     public InputRecoder input;
+    public bool playSound = true;
 
     public enum Axis {X, Y };
 
@@ -40,7 +41,7 @@ public class PuppetController : MonoBehaviour {
             bool isActivated = str.positive ? value > 0 : value < 0;
             float influenceValue = str.axis == Axis.X ? dir.y : dir.x;
             str.handle.localPosition = str.location + (isActivated ? Mathf.Abs(value) * str.scale * str.direction.normalized + influenceValue * str.influence : Vector3.zero);
-            str.audio.volume = isActivated ? Mathf.Abs(value) : 0;
+            str.audio.volume = isActivated && playSound ? Mathf.Abs(value) : 0;
         }
     }
 

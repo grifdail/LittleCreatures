@@ -43,30 +43,39 @@ public class GameFlow : MonoBehaviour {
 
     IEnumerator Flow()
     {
+
         CreateCreature();
-        yield return PlayAnimation(curtain, "Opening", 4);
+        // Interview
         _sceneContent = Instantiate(decoPuppetCreation, Vector3.zero, Quaternion.identity) as GameObject;
+        yield return PlayAnimation(curtain, "Opening", 4);
         yield return WaitForEndOfInterview();
-        yield return PlayAnimation(curtain, "Closing", 3);
-        Destroy(_sceneContent);
-        _sceneContent = Instantiate(decoPuppetToySequence, Vector3.zero, Quaternion.identity) as GameObject;
-        yield return PlayAnimation(curtain, "Opening", 4);
+
+        // Toy
+        yield return Curtain(decoPuppetPlaySequence);
         yield return new WaitForSeconds(toySequenceDuration);
-        yield return PlayAnimation(curtain, "Closing", 3);
-        Destroy(_sceneContent);
-        _sceneContent = Instantiate(decoPuppetRecordSequence, Vector3.zero, Quaternion.identity) as GameObject;
-        yield return PlayAnimation(curtain, "Opening", 4);
+        // Record
+        yield return Curtain(decoPuppetRecordSequence);
         _activeRecorder.Record();
         yield return new WaitForSeconds(recordSequenceDuration);
         _activeRecorder.Stop();
-        yield return PlayAnimation(curtain, "Closing", 3);
-        Destroy(_sceneContent);
-        _sceneContent = Instantiate(decoPuppetRecordSequence, Vector3.zero, Quaternion.identity) as GameObject;
-        yield return PlayAnimation(curtain, "Opening", 4);
+        // Play
+        yield return Curtain(decoPuppetCreation);
         _activeRecorder.Play();
         yield return new WaitForSeconds(playSequenceDuration);
+        //EndGame
         yield return PlayAnimation(curtain, "Closing", 3);
-        backUpPuppet();
+        CreateGhost();
+        Destroy(_sceneContent);
+    }
+
+    IEnumerator Curtain(GameObject deco)
+    {
+        _activeRecorder.Force(Vector2.zero);
+        yield return PlayAnimation(curtain, "Closing", 3);
+        Destroy(_sceneContent);
+        _sceneContent = Instantiate(deco, Vector3.zero, Quaternion.identity) as GameObject;
+        yield return PlayAnimation(curtain, "Opening", 4);
+        _activeRecorder.Stop();
     }
 
     IEnumerator PlayAnimation(Animator animator, string anim, float time)
@@ -80,42 +89,38 @@ public class GameFlow : MonoBehaviour {
         while (!interview.isCompleted())
         {
             yield return null;
-        } 
-
+        }
     }
 
     void CreateCreature()
     {
         GameObject prefab = puppetBodies[Random.Range(0, puppetBodies.Length)];
         GameObject go = Instantiate(prefab, puppetLocation, Quaternion.identity) as GameObject ;
-        Transform controller = go.transform.GetChild(0);
         Transform body = go.transform.GetChild(1).GetChild(0);
-        Transform recorder = go.transform.GetChild(2);
 
-        interview.m_PuppetController = controller.GetComponent<PuppetController>();
+        interview.m_PuppetController = go.GetComponentInChildren<PuppetController>();
         interview.m_BodyTransform = body;
         interview.Reset();
 
         _activePuppet = go;
-        _activeRecorder = recorder.GetComponent<InputRecoder>();
+        _activeRecorder = go.GetComponentInChildren<InputRecoder>();
 
     }
 
-    void backUpPuppet()
+    void CreateGhost()
     {
         Transform t = _activePuppet.transform;
         t.localScale = Vector3.one * ghostScale;
         if(_ghostCount>=maxGhostCount)
         {
-            Debug.Log("taaaaaaaest"+ _ghostCount);
             Destroy(_ghosts[_ghostCount % maxGhostCount]);
             _ghosts[_ghostCount % maxGhostCount] = _activePuppet;
         } else
         {
-            Debug.Log("test");
             _ghosts.Add(_activePuppet);
         }
-        Vector3 position = Vector3.Lerp(ghostPositionStart, ghostPositionEnd, (float)(_ghostCount % maxGhostCount) / maxGhostCount);
+        _activePuppet.GetComponentInChildren<PuppetController>().playSound = false;
+        Vector3 position = Vector3.Lerp(ghostPositionStart, ghostPositionEnd, (float)(_ghostCount % maxGhostCount) / (maxGhostCount - 1));
         _activeRecorder.PlayLoop();
         _ghostCount++;
         t.position = position;

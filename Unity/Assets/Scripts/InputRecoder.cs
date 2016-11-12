@@ -41,10 +41,7 @@ public class InputRecoder : MonoBehaviour {
         {
             record = this.record;
         }
-        if (currentlyDoing != null)
-        {
-            StopCoroutine(currentlyDoing);
-        }
+        StopCurrentCoroutine();
         currentlyDoing = PlayCoroutine(record);
         StartCoroutine(currentlyDoing);
         
@@ -56,31 +53,38 @@ public class InputRecoder : MonoBehaviour {
         {
             record = this.record;
         }
-        if (currentlyDoing != null)
-        {
-            StopCoroutine(currentlyDoing);
-        }
+        StopCurrentCoroutine();
         currentlyDoing = PlayLoopCoroutine(record);
         StartCoroutine(currentlyDoing);
 
     }
 
-    public void Record()
+    void StopCurrentCoroutine()
     {
         if (currentlyDoing != null)
         {
             StopCoroutine(currentlyDoing);
+            currentlyDoing = null;
         }
+    }
+
+    public void Record()
+    {
+        StopCurrentCoroutine();
         currentlyDoing = RecordCoroutine();
+        StartCoroutine(currentlyDoing);
+    }
+
+    public void Force(Vector2 axis)
+    {
+        StopCurrentCoroutine();
+        currentlyDoing = ForceCoroutine(axis);
         StartCoroutine(currentlyDoing);
     }
 
     public List<InputState> Stop()
     {
-        if (currentlyDoing != null)
-        {
-            StopCoroutine(currentlyDoing);
-        }
+        StopCurrentCoroutine();
         return record;
     }
          
@@ -96,6 +100,15 @@ public class InputRecoder : MonoBehaviour {
             yield return true;
         }
     }
+    IEnumerator ForceCoroutine(Vector2 axis)
+    {
+        while(true)
+        {
+            this.axis = axis;
+            yield return true;
+        }
+    }
+    
 
     IEnumerator PlayCoroutine(List<InputState> record)
     {
